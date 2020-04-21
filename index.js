@@ -1,14 +1,23 @@
 const express = require('express')
 const path = require('path')
 const PORT = process.env.PORT || 3000
+const cors = require('cors');
 
 var app = express();
+
 
 app.use(express.static(path.join(__dirname, 'public')))
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 app.get('/', (req, res) => res.render('pages/index'))
   
+
+// let allowCrossDomain = function(req, res, next) {
+//   res.header('Access-Control-Allow-Origin', "*");
+//   res.header('Access-Control-Allow-Headers', "*");
+//   next();
+// }
+// app.use(allowCrossDomain);
 
 // This value can be stored in an ecrypted place like Azure Key Vault.
 var  apiKey = '46688592';
@@ -39,14 +48,18 @@ app.get('/session', function(req, res, next) {
 
       /* Create token and return all required values to client  */
       if (token) {
-        res.json({ currentToken: token, currentSessionId: sessionId, apiKey:  apiKey });
+          // res.json({ currentToken: token, currentSessionId: sessionId, apiKey:  apiKey });
+          console.log(token,apiKey,sessionId)
+          res.send({ currentToken: token, currentSessionId: sessionId, apiKey:  apiKey });
       } else {
           console.log(" Error occurred when generating token using session Id")
-          res.json({ currentToken: "", currentsessionId: ""  })
+          // res.json({ currentToken: "", currentsessionId: ""  })
+          res.send({ currentToken: "", currentsessionId: ""  })
       }
     });
   });
 
-  
+
   
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`))
+
